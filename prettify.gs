@@ -17,7 +17,7 @@ function pretty () {
 
     for (var i = 0; i < elements.length; i++) {
       var element = elements[i].getElement().editAsText().getText();
-      text.push(element);
+      text.push(element + '\r');
     }
 
     tableStyle[DocumentApp.Attribute.BORDER_COLOR] = '#d9d9d9';
@@ -26,7 +26,7 @@ function pretty () {
     cellStyle[DocumentApp.Attribute.BACKGROUND_COLOR] = '#f5f5f5';
 
     var table = body.appendTable(),
-        cell = table.appendTableRow().appendTableCell([[text]]);
+        cell = table.appendTableRow().appendTableCell([[text.join("")]]);
 
     table.setAttributes(tableStyle);
     cell.setAttributes(cellStyle);
