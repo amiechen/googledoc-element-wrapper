@@ -1,10 +1,11 @@
 function onOpen(e) {
  DocumentApp.getUi().createAddonMenu()
-      .addItem('Add Code Block', 'pretty')
+      .addItem('Add Text Box', 'addTextBox')
+      .addItem('Add Code Block', 'showSidebar')
       .addToUi();
 }
 
-function pretty () {
+function addTextBox () {
  var selection = DocumentApp.getActiveDocument().getSelection(),
      body = DocumentApp.getActiveDocument().getBody();
 
@@ -31,4 +32,11 @@ function pretty () {
     table.setAttributes(tableStyle);
     cell.setAttributes(cellStyle);
   }
+}
+
+function showSidebar () {
+  var ui = HtmlService.createHtmlOutputFromFile('Sidebar')
+      .setTitle('Code Prettifier')
+      .setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  DocumentApp.getUi().showSidebar(ui);
 }
