@@ -1,3 +1,5 @@
+var selection = DocumentApp.getActiveDocument().getSelection();
+
 function onOpen(e) {
  DocumentApp.getUi().createAddonMenu()
       .addItem('Add Text Box', 'addTextBox')
@@ -6,20 +8,11 @@ function onOpen(e) {
 }
 
 function addTextBox () {
- var selection = DocumentApp.getActiveDocument().getSelection(),
-     body = DocumentApp.getActiveDocument().getBody();
-
+ var body = DocumentApp.getActiveDocument().getBody();
 
   if (selection) {
-    var elements = selection.getRangeElements(),
-        text = [],
-        tableStyle = {},
+    var tableStyle = {},
         cellStyle = {};
-
-    for (var i = 0; i < elements.length; i++) {
-      var element = elements[i].getElement().editAsText().getText();
-      text.push(element + '\r');
-    }
 
     tableStyle[DocumentApp.Attribute.BORDER_COLOR] = '#d9d9d9';
     tableStyle[DocumentApp.Attribute.FONT_FAMILY] = 'Consolas';
@@ -27,7 +20,7 @@ function addTextBox () {
     cellStyle[DocumentApp.Attribute.BACKGROUND_COLOR] = '#f5f5f5';
 
     var table = body.appendTable(),
-        cell = table.appendTableRow().appendTableCell([[text.join("")]]);
+        cell = table.appendTableRow().appendTableCell([[getSelectedText()]]);
 
     table.setAttributes(tableStyle);
     cell.setAttributes(cellStyle);
@@ -40,3 +33,15 @@ function showSidebar () {
       .setSandboxMode(HtmlService.SandboxMode.IFRAME);
   DocumentApp.getUi().showSidebar(ui);
 }
+
+function getSelectedText() {
+  var elements = selection.getRangeElements(),
+      text = [];
+
+  for (var i = 0; i < elements.length; i++) {
+    var element = elements[i].getElement().editAsText().getText();
+    text.push(element);
+  }
+  return text.join('\r');
+}
+
