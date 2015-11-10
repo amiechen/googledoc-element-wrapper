@@ -7,8 +7,12 @@ function onOpen(e) {
       .addToUi();
 }
 
+function onInstall(e) {
+  onOpen(e);
+}
+
 function addTextBox () {
- var body = DocumentApp.getActiveDocument().getBody();
+  var body = DocumentApp.getActiveDocument().getBody();
 
   if (selection) {
     var tableStyle = {},
@@ -19,6 +23,7 @@ function addTextBox () {
     tableStyle[DocumentApp.Attribute.FONT_SIZE] = 9;
     cellStyle[DocumentApp.Attribute.BACKGROUND_COLOR] = '#f5f5f5';
 
+    // TODO: instead of append table to body, delete all selected text then draw the table
     var table = body.appendTable(),
         cell = table.appendTableRow().appendTableCell([[getSelectedText()]]);
 

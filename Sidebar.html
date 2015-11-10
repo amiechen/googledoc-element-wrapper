@@ -4,30 +4,39 @@
     <base target="_top">
     <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
     <!-- The CSS package above applies Google styling to buttons and other elements. -->
-    <link href="prettify.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
     <div class="sidebar">
       <h1>Code Style</h1>
-      <div>
-        <input type="radio" name="midnight" id="radio-midnight" value="" checked="checked">
-        <label for="radio-midnight">midnight</label>
-      </div>
-      <div class="preview"></div>
-      <button class="blue" id="prettify">Prettify</button>
+      <form action="">
+        <div>
+          <input type="radio" name="default">
+          <label>Default</label>
+        </div>
+        <div>
+          <input type="radio" name="sunburst">
+          <label>Sunburst</label>
+        </div>
+        <div>
+          <input type="radio" name="monokai">
+          <label>Monokai</label>
+        </div>
+        <div class="preview"></div>
+        <button class="blue" id="prettify">Prettify</button>
+      </form>
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-    <script type="text/javascript" src="prettify.js"></script>
     <script>
       $(function() {
         $('#prettify').click(function(){
-          function onSuccess(selectedText) {
-            $('.preview').text(selectedText);
-          }
+          this.disabled = true;
+
           google.script.run
-            .withSuccessHandler(onSuccess)
+            .withSuccessHandler(function onSuccess(selectedText){
+              $('.preview').text(selectedText);
+            })
             .getSelectedText();
         });
       });
