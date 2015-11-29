@@ -16,39 +16,10 @@ function addTextBox () {
   if (selection) {
     var tableStyle = {};
     var cellStyle = {};
-    var selectedText = getSelectedText();
-    var firstIndex;
     var table;
     var cell;
-
-    firstIndex = replaceSelection();
-    table = body.insertTable(firstIndex);
-    cell = table.appendTableRow().appendTableCell([[selectedText]]);
-
-    tableStyle[DocumentApp.Attribute.BORDER_COLOR] = '#d9d9d9';
-    tableStyle[DocumentApp.Attribute.FONT_FAMILY] = 'Consolas';
-    tableStyle[DocumentApp.Attribute.FONT_SIZE] = 9;
-    cellStyle[DocumentApp.Attribute.BACKGROUND_COLOR] = '#f5f5f5';
-
-    table.setAttributes(tableStyle);
-    cell.setAttributes(cellStyle);
-  }
-}
-
-function getSelectedText() {
-  var elements = selection.getRangeElements();
-  var text = [];
-
-  for (var i = 0; i < elements.length; i++) {
-    var element = elements[i].getElement().editAsText().getText();
-    text.push(element);
-  }
-  return text.join('\r');
-}
-
-function replaceSelection() {
-  var firstIndex;
-  if (selection) {
+    var firstIndex;
+    var selectedText = [];
     var elements = selection.getRangeElements();
 
     for (var i = 0; i < elements.length; i++) {
@@ -61,16 +32,28 @@ function replaceSelection() {
         if (i === 0) {
           firstIndex = DocumentApp.getActiveDocument().getBody().getChildIndex(elements[i].getElement().getParent());
         }
-
+        selectedText.push(text);
         element.deleteText(startIndex, endIndex);
       } else {
         var element = elements[i].getElement();
         if (i === 0) {
           firstIndex = DocumentApp.getActiveDocument().getBody().getChildIndex(element);
         }
+        selectedText.push(element.editAsText().getText());
         element.removeFromParent();
       }
     }
+
+    table = body.insertTable(firstIndex);
+    cell = table.appendTableRow().appendTableCell([[selectedText.join('\r')]]);
+
+    tableStyle[DocumentApp.Attribute.BORDER_COLOR] = '#d9d9d9';
+    tableStyle[DocumentApp.Attribute.FONT_FAMILY] = 'Consolas';
+    tableStyle[DocumentApp.Attribute.FONT_SIZE] = 9;
+    cellStyle[DocumentApp.Attribute.BACKGROUND_COLOR] = '#f5f5f5';
+
+    table.setAttributes(tableStyle);
+    cell.setAttributes(cellStyle);
   }
-  return firstIndex;
 }
+
