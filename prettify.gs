@@ -47,7 +47,6 @@ function addBox () {
 
     setTableStyle(table,cell);
   } else {
-    Logger.log(DocumentApp.getActiveDocument().getCursor().getElement());
     var cursorElement = DocumentApp.getActiveDocument().getCursor().getElement();
     var index;
 
