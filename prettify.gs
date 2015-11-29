@@ -41,7 +41,6 @@ function getSelectedText() {
 
   for (var i = 0; i < elements.length; i++) {
     var element = elements[i].getElement().editAsText().getText();
-    Logger.log(element);
     text.push(element);
   }
   return text.join('\r');
@@ -53,19 +52,22 @@ function replaceSelection() {
     var elements = selection.getRangeElements();
 
     for (var i = 0; i < elements.length; i++) {
-      if (i === 0) {
-        firstIndex = DocumentApp.getActiveDocument().getBody().getChildIndex(elements[i].getElement());
-      }
-
       if (elements[i].isPartial()) {
         var element = elements[i].getElement().asText();
         var startIndex = elements[i].getStartOffset();
         var endIndex = elements[i].getEndOffsetInclusive();
         var text = element.getText().substring(startIndex, endIndex + 1);
 
+        if (i === 0) {
+          firstIndex = DocumentApp.getActiveDocument().getBody().getChildIndex(elements[i].getElement().getParent());
+        }
+
         element.deleteText(startIndex, endIndex);
       } else {
         var element = elements[i].getElement();
+        if (i === 0) {
+          firstIndex = DocumentApp.getActiveDocument().getBody().getChildIndex(element);
+        }
         element.removeFromParent();
       }
     }
