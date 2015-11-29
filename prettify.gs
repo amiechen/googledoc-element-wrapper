@@ -2,7 +2,7 @@ var selection = DocumentApp.getActiveDocument().getSelection();
 
 function onOpen(e) {
  DocumentApp.getUi().createAddonMenu()
-      .addItem('Add Text Box', 'addTextBox')
+      .addItem('Add Box', 'addBox')
       .addToUi();
 }
 
@@ -10,12 +10,10 @@ function onInstall(e) {
   onOpen(e);
 }
 
-function addTextBox () {
+function addBox () {
   var body = DocumentApp.getActiveDocument().getBody();
 
   if (selection) {
-    var tableStyle = {};
-    var cellStyle = {};
     var table;
     var cell;
     var firstIndex;
@@ -47,6 +45,30 @@ function addTextBox () {
     table = body.insertTable(firstIndex);
     cell = table.appendTableRow().appendTableCell([[selectedText.join('\r')]]);
 
+    setTableStyle(table,cell);
+  } else {
+    Logger.log(DocumentApp.getActiveDocument().getCursor().getElement());
+    var cursorElement = DocumentApp.getActiveDocument().getCursor().getElement();
+    var index;
+
+    if (cursorElement == 'Paragraph') {
+      index = body.getChildIndex(DocumentApp.getActiveDocument().getCursor().getElement());
+    } else {
+      index = body.getChildIndex(DocumentApp.getActiveDocument().getCursor().getElement().getParent());
+    }
+
+    var table = body.insertTable(index);
+    var cell = table.appendTableRow().appendTableCell([['']]);
+
+    setTableStyle(table,cell);
+  }
+}
+
+
+function setTableStyle(table,cell){
+    var tableStyle = {};
+    var cellStyle = {};
+
     tableStyle[DocumentApp.Attribute.BORDER_COLOR] = '#d9d9d9';
     tableStyle[DocumentApp.Attribute.FONT_FAMILY] = 'Consolas';
     tableStyle[DocumentApp.Attribute.FONT_SIZE] = 9;
@@ -54,6 +76,4 @@ function addTextBox () {
 
     table.setAttributes(tableStyle);
     cell.setAttributes(cellStyle);
-  }
 }
-
